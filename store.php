@@ -1,9 +1,11 @@
 <?php
 
 
-
+//store the product
 //http://localhost/newroz/task1/store.php?name='hi'&stock=1&price=3&weight=2
 
+
+//update the stock
 //http://localhost/newroz/task1/store.php?name='hi'&stockupdate=1
 
 isset($_REQUEST['name'])?$product_name=$_REQUEST['name']:'';
