@@ -6,7 +6,10 @@
 
 
 //update the stock
+//positive number to increase stock
 //http://localhost/newroz/task1/store.php?name='hi'&stockupdate=1
+//negative number to decrease stock
+//http://localhost/newroz/task1/store.php?name='hi'&stockupdate=-1
 
 isset($_REQUEST['name'])?$product_name=$_REQUEST['name']:'';
 isset($_REQUEST['stock'])?$product_stock=$_REQUEST['stock']:'';
@@ -25,9 +28,9 @@ if(isset($product_stock_update)){
 
     if ($conn->query($sql) === TRUE) {
 
-      $output='updated successfully';
+    $response='product updated successfully';
     http_response_code(200);
-    echo json_encode($output);
+    echo json_encode($response);
 
       
     } else {
@@ -40,8 +43,10 @@ if(isset($product_stock_update)){
     $result = $conn->query("SELECT name FROM product WHERE name=$product_name");
 
     if ($result->num_rows > 0) {
- 
-        echo 'y';
+      $response='product already exists';
+      http_response_code(200);
+      echo json_encode($response);
+       
     
     } else{
   
@@ -49,9 +54,9 @@ if(isset($product_stock_update)){
     VALUES ($product_name, $product_stock, $product_price,$product_weight)";
     
     if ($conn->query($sql) === TRUE) {
-      $output='data added successfully';
+      $response='product added successfully';
     http_response_code(200);
-    echo json_encode($output);
+    echo json_encode($response);
     } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
     }
