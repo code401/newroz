@@ -1,6 +1,17 @@
 <?php
 
 
+//list of all pending order
+//http://localhost/newroz/task3/stock.php?list=pending
+
+//status change of delivered product
+//status =1 means product delivered,0 means product order pending
+
+//http://localhost/newroz/task3/stock.php?status=1&orderid=be31590
+
+//stock quantity updated of failure delivery
+
+//http://localhost/newroz/task3/stock.php?stockupdate=1&orderid=be31590
 
 
 
@@ -13,19 +24,30 @@ if ($conn->connect_error) {
 
 
 
-if(isset($_REQUEST['list'])&&isset($_REQUEST['list'])=='all'){
+if(isset($_REQUEST['list'])&&isset($_REQUEST['list'])=='pending'){
 
 
-$sql = "SELECT * FROM product_order";
+$sql = "SELECT * FROM product_order WHERE status=0";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
 
     while($row = $result->fetch_assoc()) {
-        echo $row['status'];
+
+
+      $response=array('name'=>$row['name'],'orderid'=>$row['orderid'],'mobileno'=>$row['mobile_no'],'address'=>$row['address'],'deliverycharge'=>$row['charge']);
+     
+      echo json_encode($response);
+      echo '<br/>';
+      
     }
 } else {
-    echo "0 results";
+
+  $response='No product available';
+     
+  echo json_encode($response);
+  
+   
 }
 
 
@@ -39,7 +61,11 @@ if(isset($_REQUEST['status']) && isset($_REQUEST['orderid'])){
     $sql = "UPDATE product_order SET status='$status' WHERE orderid='$orderid'";
 
     if ($conn->query($sql) === TRUE) {
-      echo "Record updated successfully";
+      
+      $response='product order deliver status updated';
+      http_response_code(200);
+      echo json_encode($response);
+
     } else {
       echo "Error updating record: " . $conn->error;
     }
@@ -72,7 +98,9 @@ if(isset($_REQUEST['stockupdate']) && isset($_REQUEST['orderid'])){
     $sql = "UPDATE product SET stock=stock+$stockupdate WHERE name='$name'";
 
     if ($conn->query($sql) === TRUE) {
-      echo "Record updated successfully";
+      $response='product stock updated';
+      http_response_code(200);
+      echo json_encode($response);
     } else {
       echo "Error updating record: " . $conn->error;
     }
